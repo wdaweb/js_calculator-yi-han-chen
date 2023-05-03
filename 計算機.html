@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>計算機</title>
+  <style>
+    body {
+      background-image: url(https://png.pngtree.com/thumb_back/fh260/background/20210513/pngtree-desktop-wood-wood-texture-image_714748.jpg);
+    }
+
+
+    table {
+      border-spacing: 15px;
+      margin: auto;
+      background: #fff;
+      border-radius: 5%;
+      background: #5f6680;
+      box-shadow: inset -6px -6px 10px #3c4257;
+    }
+
+    td {
+      padding: 15px;
+      background-color: #72778b;
+      box-shadow: inset -6px -6px 0px #5a5e71;
+      width: 40px;
+      height: 40px;
+      text-align: center;
+      vertical-align: middle;
+      font-size: 15px;
+      border-radius: 40px;
+      color: #fff;
+      font-size: 20px;
+    }
+
+
+    #text {
+      background: lightblue;
+      box-shadow: inset 6px 6px 0px #3facc0;
+      text-align: right;
+      font-size: 27px;
+      color: #000;
+    }
+
+    #orange {
+      background-color: #e3844c;
+      box-shadow: inset -6px -6px 0px #e76a3d;
+    }
+
+    #gray {
+      background-color: #dededc;
+      box-shadow: inset -6px -6px 0px #bebebe;
+      color: #5f6680;
+    }
+
+
+    #orange:hover {
+      background-color: #f3945e;
+      box-shadow: inset -6px -6px 0px #f7784a;
+    }
+
+    #orange:active {
+      background-color: #f3945e;
+      box-shadow: inset 6px 6px 0px #f7784a;
+    }
+
+
+
+    #gray:hover {
+      background-color: #efefed;
+      box-shadow: inset -6px -6px 0px #d5d5d5;
+    }
+
+    #gray:active {
+      background-color: #efefed;
+      box-shadow: inset 6px 6px 0px #d5d5d5;
+    }
+
+    td:hover {
+      background-color: #8b90a2;
+      box-shadow: inset -6px -6px 0px #777b90;
+    }
+
+    td:active {
+      background-color: #8b90a2;
+      box-shadow: inset 6px 6px 0px #777b90;
+    }
+  </style>
+</head>
+
+<body>
+  <table border="1">
+    <tr>
+      <td colspan="4" id="text">0</td>
+    </tr>
+    <tr>
+      <td id="orange">C</td>
+      <td id="gray">/</td>
+      <td id="gray">*</td>
+      <td id="gray">-</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>8</td>
+      <td>9</td>
+      <td id="gray" rowspan="2">+</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>5</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+      <td id="orange" rowspan="2">=</td>
+    </tr>
+    <tr>
+      <td colspan="2">0</td>
+      <td>.</td>
+    </tr>
+  </table>
+  <script>
+    const text = document.getElementById('text')
+    const btns = document.querySelectorAll('td:not(#text)')
+
+    for (const btn of btns) {
+      btn.addEventListener('click', () => {
+        const btnText = btn.innerText
+        const operators = ['+', '-', '*', '/']
+        const lastText = text.innerText[text.innerText.length - 1]
+        // 如果按的鍵是 =
+        if (btnText === '=') {
+          // 如果最後一個字不是運算子，才計算
+          if (!operators.includes(lastText)) {
+            text.innerText = eval(text.innerText)
+          }
+        }
+        // 如果按 C，歸 0
+        else if (btnText === 'C') {
+          text.innerText = '0'
+        }
+        // 如果現在是 0，按的是數字，把文字取代
+        else if (text.innerText === '0' && !isNaN(parseInt(btnText))) {
+          text.innerText = btnText
+        }
+        // 如果最後一個字是運算子
+        else if (operators.includes(lastText)) {
+          // 現在按的不是運算子，才加上去
+          if (!operators.includes(btnText)) {
+            text.innerText += btnText
+          }
+        }
+        // 如果按的是 .
+        else if (btnText === '.') {
+          let canAddDot = true
+          // 從最後一個字往前跑迴圈
+          for (let i = text.innerText.length - 1; i >= 0; i--) {
+            // 如果先遇到運算子，一定可以加 .
+            if (operators.includes(text.innerText[i])) break
+            // 如果先遇到 .，一定不能加 .
+            if (text.innerText[i] === '.') {
+              canAddDot = false
+              break
+            }
+          }
+          // 迴圈完可以加才
+          if (canAddDot) text.innerText += '.'
+        }
+        // 如果最後一個字不是運算子，加上去
+        else {
+          text.innerText += btnText
+        }
+      })
+    }
+
+    document.addEventListener('keydown', event => {
+      const btnText = event.key
+      const operators = ['+', '-', '*', '/']
+      const lastText = text.innerText[text.innerText.length - 1]
+      // 如果按的鍵是 =
+      if (btnText === '=' || btnText === 'Enter') {
+        // 如果最後一個字不是運算子，才計算
+        if (!operators.includes(lastText)) {
+          text.innerText = eval(text.innerText)
+        }
+      }
+      // 如果按 C，歸 0
+      else if (btnText === 'c') {
+        text.innerText = '0'
+      }
+      // 如果現在是 0，按的是數字，把文字取代
+      else if (text.innerText === '0' && !isNaN(parseInt(btnText))) {
+        text.innerText = btnText
+      }
+      // 如果最後一個字是運算子
+      else if (operators.includes(lastText)) {
+        // 現在按的不是運算子，且是數字才加上去
+        if (!operators.includes(btnText) && !isNaN(parseInt(btnText))) {
+          text.innerText += btnText
+        }
+      }
+      // 如果最後一個字不是運算子，且按的是數字或運算子，加上去
+      else if (!isNaN(parseInt(btnText)) || operators.includes(btnText)) {
+        text.innerText += btnText
+      }
+      // 如果按的是 .
+      else if (btnText === '.') {
+        let canAddDot = true
+        // 從最後一個字往前跑迴圈
+        for (let i = text.innerText.length - 1; i >= 0; i--) {
+          // 如果先遇到運算子，一定可以加 .
+          if (operators.includes(text.innerText[i])) break
+          // 如果先遇到 .，一定不能加 .
+          if (text.innerText[i] === '.') {
+            canAddDot = false
+            break
+          }
+        }
+        // 迴圈完可以加才
+        if (canAddDot) text.innerText += '.'
+      }
+    })
+  </script>
+</body>
+
+</html>
